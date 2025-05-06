@@ -1,0 +1,54 @@
+version: '3.9'
+
+services:
+  mysql:
+    image: "mysql:latest"
+    container_name: docker_mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=mitchinmat
+    ports:
+      - "3307:3306"
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ./mysql:/etc/mysql/conf.d  # MySQL 설정 파일 적용
+
+  redis:
+    image: "redis:latest"
+    container_name: docker_redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  elasticsearch:
+    build:
+      context: .
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "9200:9200"
+    volumes:
+      # 동의어 및 사전 파일을 컨테이너에 복사
+      - ./dictionary.txt:/usr/share/elasticsearch/config/analysis/dictionary.txt
+      - ./synonyms.txt:/usr/share/elasticsearch/config/analysis/synonyms.txt
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9200" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5

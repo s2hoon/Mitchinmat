@@ -1,0 +1,43 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  docker:
+    compose:
+      enabled: false
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+      jdbc:
+        time_zone: Asia/Seoul
+    generate-ddl: true
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${DATASOURCE_URL}?allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&useSSL=false
+    username: ${DATASOURCE_USERNAME}
+    password: ${DATASOURCE_PASSWORD}
+
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+
+elasticsearch:
+  host: ${ELASTICSEARCH_HOST}
+
+webhook:
+  discord:
+    username: ${DISCORD_USERNAME}
+    avatar-url: ${DISCORD_AVATAR_URL}
+    error-url: ${DISCORD_ERROR_URL}
+
+logging:
+  level:
+    com.mitchinmat: DEBUG

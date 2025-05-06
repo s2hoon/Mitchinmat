@@ -1,0 +1,57 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+  main:
+    lazy-initialization: true
+  docker:
+    compose:
+      enabled: true
+      file: ./docker/docker-compose.yml
+      lifecycle-management: START_ONLY
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+      jdbc:
+        time_zone: Asia/Seoul
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        highlight_sql: true
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3307/mitchinmat?serverTimezone=Asia/Seoul&useSSL=false
+    username: root
+    password:
+
+  redis:
+    host: localhost
+    port: 6379
+
+elasticsearch:
+  host: http://localhost:9200
+
+webhook:
+  discord:
+    username: ${DISCORD_USERNAME}
+    avatar-url: ${DISCORD_AVATAR_URL}
+    error-url: ${DISCORD_ERROR_URL}
+
+logging:
+  level:
+    root: INFO
+    io.lettuce.core: INFO
+    org.elasticsearch.client: INFO
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "metrics,health"
+  metrics:
+    enable:
+      jdbc: false

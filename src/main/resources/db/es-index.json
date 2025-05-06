@@ -1,0 +1,61 @@
+{
+  "settings": {
+    "number_of_shards": 5,
+    "number_of_replicas": 1,
+    "analysis": {
+      "filter": {
+        "synonym_filter": {
+          "type": "synonym",
+          "synonyms_path": "analysis/synonyms.txt",
+          "updatable": true
+        }
+      },
+      "tokenizer": {
+        "nori_tokenizer": {
+          "type": "nori_tokenizer",
+          "decompound_mode": "mixed",
+          "user_dictionary": "analysis/dictionary.txt"
+        }
+      },
+      "analyzer": {
+        "combined_analyzer": {
+          "tokenizer": "nori_tokenizer",
+          "filter": [
+            "lowercase",
+            "synonym_filter"
+          ]
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "place_id": {
+        "type": "long"
+      },
+      "user_id": {
+        "type": "keyword"
+      },
+      "place_name": {
+        "type": "text"
+      },
+      "address_name": {
+        "type": "text"
+      },
+      "road_address_name": {
+        "type": "text"
+      },
+      "place_category": {
+        "type": "keyword"
+      },
+      "location": {
+        "type": "geo_point"
+      },
+      "combined_field": {
+        "type": "text",
+        "analyzer": "combined_analyzer",
+        "search_analyzer": "combined_analyzer"
+      }
+    }
+  }
+}

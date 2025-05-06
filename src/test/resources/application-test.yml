@@ -1,0 +1,71 @@
+spring:
+  docker:
+    compose:
+      enabled: true
+      file: ./docker/docker-compose.yml
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+      jdbc:
+        time_zone: Asia/Seoul
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        highlight_sql: true
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3307/mitchinmat?serverTimezone=Asia/Seoul&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: root
+
+  redis:
+    host: localhost
+    port: 6379
+
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: dummy-client-id
+            client-secret: dummy-client-secret
+            redirect-uri: http://localhost:8080/oauth/callback/dummy
+            client-authentication-method: client_secret_post
+            authorization-grant-type: authorization_code
+            client-name: dummy
+            scope: profile_nickname, profile_image, friends
+        provider:
+          kakao:
+            authorization-uri: https://dummy.oauth/authorize
+            token-uri: https://dummy.oauth/token
+            user-info-uri: https://dummy.api/user/me
+            user-scope-uri: https://dummy.api/user/scopes
+            user-name-attribute: id
+
+  auth:
+    token:
+      header: Authorization
+      secret-key: dummy-secret-key
+      access-token-valid-millisecond: 86400000  # 1 day in milliseconds
+      refresh-token-valid-millisecond: 604800000  # 7 days in milliseconds
+      refresh-cookie-key: dummyRefreshToken
+
+elasticsearch:
+  host: http://localhost:9200
+
+#webhook:
+#  discord:
+#    username: ${DISCORD_USERNAME}
+#    avatar-url: ${DISCORD_AVATAR_URL}
+#    error-url: ${DISCORD_ERROR_URL}
+
+logging:
+  level:
+    root: WARN
+    io.lettuce.core: WARN
+    org.elasticsearch.client: WARN
+    org.springframework: DEBUG
